@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OVA Perfume Store</title>
+  <meta name="color-scheme" content="light only">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light only; }
+    :root {
+      --dark: #f5f0e8;
+      --card: #fffdf8;
+      --purple: #8b6f47;
+      --purple-light: #b08d5e;
+      --gold: #6b4f2a;
+      --gold-light: #8b6535;
+      --text: #2c1f0e;
+      --muted: #9a8570;
+    }
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #ffffff;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== PARTICLES ===== */
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ===== HEADER ===== */
+header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.store-label {
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 6px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  animation: fadeDown 0.8s ease both;
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.5rem, 10vw, 6rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, #2c1f0e 0%, #8b6535 50%, #2c1f0e 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeDown 0.9s 0.15s ease both, shimmerText 4s 1s linear infinite;
+}
+
+header p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-top: 10px;
+  font-weight: 300;
+  animation: fadeDown 1s 0.3s ease both;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmerText {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.cart-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: var(--purple);
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(139,111,71,0.3);
+  transition: all 0.3s;
+  animation: fadeDown 0.7s 0.5s ease both;
+}
+
+.cart-btn:hover {
+  background: var(--purple-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139,111,71,0.4);
+}
+
+.cart-count {
+  background: var(--gold);
+  color: var(--dark);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.cart-count.bump { animation: bumpCount 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+@keyframes bumpCount {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.7); }
+  100% { transform: scale(1); }
+}
+
+/* ===== PRODUCTS ===== */
+.products-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.product-card {
+  background: var(--card);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(139,111,71,0.15);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, border-color 0.3s;
+  position: relative;
+  opacity: 0;
+  animation: cardEntrance 0.6s ease forwards;
+  box-shadow: 0 2px 16px rgba(139,111,71,0.08);
+}
+
+/* staggered delay per card */
+.product-card:nth-child(1)  { animation-delay: 0.05s; }
+.product-card:nth-child(2)  { animation-delay: 0.10s; }
+.product-card:nth-child(3)  { animation-delay: 0.15s; }
+.product-card:nth-child(4)  { animation-delay: 0.20s; }
+.product-card:nth-child(5)  { animation-delay: 0.25s; }
+.product-card:nth-child(6)  { animation-delay: 0.30s; }
+.product-card:nth-child(7)  { animation-delay: 0.35s; }
+.product-card:nth-child(8)  { animation-delay: 0.40s; }
+.product-card:nth-child(9)  { animation-delay: 0.45s; }
+.product-card:nth-child(10) { animation-delay: 0.50s; }
+.product-card:nth-child(11) { animation-delay: 0.55s; }
+.product-card:nth-child(12) { animation-delay: 0.60s; }
+.product-card:nth-child(13) { animation-delay: 0.65s; }
+.product-card:nth-child(14) { animation-delay: 0.70s; }
+.product-card:nth-child(15) { animation-delay: 0.75s; }
+.product-card:nth-child(16) { animation-delay: 0.80s; }
+.product-card:nth-child(17) { animation-delay: 0.85s; }
+
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(139,111,71,0.2);
+  border-color: rgba(139,111,71,0.4);
+}
+
+/* Shimmer overlay on hover */
+.product-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  transition: background-position 0.6s ease;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.product-card:hover::after {
+  background-position: 200% 0;
+}
+
+.product-card.soldout { opacity: 0.6; }
+
+.soldout-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0,0,0,0.08);
+  color: #999;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.product-img-wrap {
+  width: 100%;
+  height: 240px;
+  background: linear-gradient(135deg, #f0e8d8 0%, #e8dcc8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  transition: transform 0.4s;
+}
+
+.product-card:hover .product-img-wrap img { transform: scale(1.05); }
+
+.product-info {
+  padding: 20px;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.product-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.product-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+.product-price span {
+  font-size: 0.75rem;
+  font-family: 'Tajawal', sans-serif;
+  color: var(--muted);
+}
+
+.add-btn {
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.add-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+  border-radius: 50px;
+}
+
+.add-btn:hover::before { transform: translateX(0); }
+
+.add-btn:hover:not(:disabled) {
+  background: var(--purple-light);
+  box-shadow: 0 4px 20px rgba(108,63,197,0.6);
+  transform: scale(1.05);
+}
+
+.add-btn:active:not(:disabled) { transform: scale(0.96); }
+.add-btn:disabled { background: #2a2545; color: #555; cursor: not-allowed; }
+
+/* ===== CART DRAWER ===== */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,31,14,0.4);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+
+.cart-drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  background: #fffdf8;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(139,111,71,0.2);
+  box-shadow: 4px 0 30px rgba(139,111,71,0.1);
+}
+
+.cart-drawer.open { transform: translateX(0); }
+
+.cart-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(139,111,71,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: #fff; }
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.cart-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 60px 20px;
+  font-size: 0.95rem;
+}
+
+.cart-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: rgba(139,111,71,0.06);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(139,111,71,0.12);
+  align-items: center;
+}
+
+.cart-item-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #f0e8d8;
+  flex-shrink: 0;
+}
+
+.cart-item-info { flex: 1; }
+
+.cart-item-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.cart-item-price {
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.qty-btn {
+  background: rgba(139,111,71,0.12);
+  border: none;
+  color: var(--text);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.qty-btn:hover { background: var(--purple); color: #fff; }
+
+.qty-num {
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+.remove-item {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0;
+  margin-right: auto;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.remove-item:hover { opacity: 1; }
+
+/* ===== ORDER FORM ===== */
+.cart-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(139,111,71,0.15);
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cart-total-label { color: var(--muted); font-size: 0.9rem; }
+.cart-total-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+.order-form { display: flex; flex-direction: column; gap: 10px; }
+
+.order-input {
+  background: rgba(139,111,71,0.06);
+  border: 1px solid rgba(139,111,71,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.order-input:focus { border-color: var(--purple); }
+.order-input::placeholder { color: var(--muted); }
+
+.whatsapp-btn {
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 16px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+  margin-top: 4px;
+}
+.whatsapp-btn:hover { background: #1db954; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37,211,102,0.4); }
+.whatsapp-btn:disabled { background: #2a4a35; color: #555; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ===== PRODUCT MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,31,14,0.6);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  padding: 20px;
+}
+
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal-box {
+  background: #fffdf8;
+  border-radius: 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(40px) scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 30px 80px rgba(44,31,14,0.2);
+}
+
+.modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
+
+.modal-img {
+  width: 100%;
+  height: 260px;
+  object-fit: contain;
+  background: linear-gradient(135deg, #f0e8d8 0%, #e8dcc8 100%);
+  border-radius: 24px 24px 0 0;
+  padding: 20px;
+}
+
+.modal-body { padding: 24px; }
+
+.modal-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c1f0e;
+  margin-bottom: 6px;
+}
+
+.modal-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: #8b6535;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.modal-desc-long {
+  color: #5a4a35;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.modal-notes {
+  background: rgba(139,111,71,0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.modal-notes-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8b6f47;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.modal-notes-text {
+  font-size: 0.9rem;
+  color: #5a4a35;
+  line-height: 1.6;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.modal-add-btn {
+  flex: 1;
+  background: #8b6f47;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modal-add-btn:hover { background: #b08d5e; transform: translateY(-2px); }
+.modal-add-btn:disabled { background: #ccc; color: #999; cursor: not-allowed; transform: none; }
+
+.modal-close-btn {
+  background: rgba(139,111,71,0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #8b6f47;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.modal-close-btn:hover { background: rgba(139,111,71,0.2); }
+
+.modal-top-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #5a4a35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.modal-top-close:hover { background: #fff; }
+
+.modal-img-wrap { position: relative; }
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(44,31,14,0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.success-overlay.show { opacity: 1; pointer-events: all; }
+
+.success-box {
+  background: #fffdf8;
+  border: 1px solid rgba(37,211,102,0.3);
+  border-radius: 24px;
+  padding: 50px 40px;
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 0 60px rgba(37,211,102,0.1);
+  transform: scale(0.8);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.success-overlay.show .success-box { transform: scale(1); }
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.success-box h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.success-box p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.success-close {
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 32px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.success-close:hover { background: var(--purple-light); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .product-img-wrap { height: 160px; }
+  .product-info { padding: 14px; }
+  .product-name { font-size: 0.9rem; }
+  .product-price { font-size: 1.1rem; }
+  .add-btn { padding: 8px 14px; font-size: 0.78rem; }
+  .cart-drawer { max-width: 100%; }
+}
+
+@media (max-width: 380px) {
+  .product-grid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+.cart-items::-webkit-scrollbar { width: 4px; }
+.cart-items::-webkit-scrollbar-track { background: transparent; }
+.cart-items::-webkit-scrollbar-thumb { background: rgba(139,111,71,0.3); border-radius: 2px; }
+
+
+  </style>
+</head>
+<body>
+
+<!-- Particles -->
+
+<div id="particles"></div>
+
+<!-- Cart Button -->
+
+<button class="cart-btn" onclick="toggleCart()">
+  🛒 السلة
+  <span class="cart-count" id="cartCount">0</span>
+</button>
+
+<!-- Header -->
+
+<header>
+  <div class="store-label">PERFUME STORE</div>
+  <h1>OVA</h1>
+  <p>Where content becomes tangible</p>
+</header>
+
+<!-- Products -->
+
+<section class="products-section">
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- Cart Overlay -->
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+<!-- Cart Drawer -->
+
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>🛒 سلة الطلبات</h2>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">السلة فارغة<br>أضف منتجات للبدء ✨</div>
+  </div>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">الإجمالي</span>
+      <span class="cart-total-price" id="cartTotal">0 جنيه</span>
+    </div>
+    <div class="order-form" id="orderForm">
+      <input class="order-input" id="customerName" type="text" placeholder="اسمك الكريم" />
+      <input class="order-input" id="customerPhone" type="tel" placeholder="رقم تليفونك" />
+      <input class="order-input" id="customerAddress" type="text" placeholder="عنوانك (اختياري)" />
+      <button class="whatsapp-btn" id="sendBtn" onclick="sendOrder()" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        أرسل الطلب على واتساب
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Product Detail Modal -->
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-img-wrap">
+      <button class="modal-top-close" onclick="closeModal()">✕</button>
+      <img class="modal-img" id="modalImg" src="" alt="" />
+    </div>
+    <div class="modal-body">
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-desc-long" id="modalDescLong"></div>
+      <div class="modal-notes">
+        <div class="modal-notes-title">✨ النوتات</div>
+        <div class="modal-notes-text" id="modalNotes"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-add-btn" id="modalAddBtn" onclick="modalAddToCart()">🛒 أضف للسلة</button>
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Popup -->
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <span class="success-icon">✅</span>
+    <h3>تم حفظ الطلب!</h3>
+    <p>شكراً ليك! طلبك اتبعت على واتساب وهنتواصل معاك في أقرب وقت 💜</p>
+    <button class="success-close" onclick="closeSuccess()">تمام 👍</button>
+  </div>
+</div>
+
+<script>
+  // ========================
+  // ⚠️ غير الرقم ده برقمك بالواتساب (مع كود البلد بدون + أو 00)
+  // مثال مصر: 201012345678
+  const WHATSAPP_NUMBER = "201066079021";
+  // ========================
+
+  /* ===== PARTICLES ===== */
+  (function spawnParticles() {
+    const container = document.getElementById('particles');
+    const colors = ['rgba(139,111,71,0.25)', 'rgba(201,168,76,0.2)', 'rgba(176,141,94,0.2)', 'rgba(107,69,42,0.15)'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 5 + 2;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random() * 100}%;
+        background:${colors[Math.floor(Math.random() * colors.length)]};
+        animation-duration:${8 + Math.random() * 14}s;
+        animation-delay:${Math.random() * 10}s;
+        filter: blur(${Math.random() > 0.5 ? 1 : 0}px);
+      `;
+      container.appendChild(p);
+    }
+  })();
+
+  const products = [
+    {
+      id: 1,  name: "Emerald Soul Diamond",
+      desc: "إصدار محدود من أرقى العطور",
+      // ✏️ اكتبي هنا الوصف الطويل
+      details: "يأتي ايماريلد سول دايموند كنسخة عطرية من وعود الليل الأولى، حيث يتمازج البرغموت والمندرين مع العنبر والفانيليا كإشراقة ناعمة تتسلل بين ظلال الأفق.",
+      // ✏️ اكتبي هنا النوتات
+      notes: "قمة: البرغموت، المندرين | قلب: الياسمين، الورد البلغاري | قاعدة: العنبر، الفانيليا",
+
+      price: 1600, img: "Images/Image 1.jpeg",  soldout: true
+    },
+    {
+      id: 2,  name: "Nude Coral Diamond",
+      desc: "رائحة ناعمة تدوم طويلاً",
+      details: "حيث يتراقص البرغموت مع الزعفران برفقة زهر البرتقال وجوز الهند بينما تكتمل اللوحة العطرية بالكشميران الدافئ والفانيليا.",
+      notes: "قمة: البرغموت، الزعفران | قلب: زهر البرتقال، جوز الهند | قاعدة: الكشميران، الفانيليا",
+      price: 1600, img: "Images/Image 2.jpeg",  soldout: false
+    },
+    {
+      id: 3,  name: "Grey Pearl Diamond",
+      desc: "عطر فاخر بأسلوب راقٍ",
+      details: "هذا العطر يجمع بين جمال الحداثة وعمق الأصالة الشرقية، من خلال نفحات عطره مكونة من زهور الياسمين والباتشولي والورد التي تفيض بالأناقة. وفي الختام، تكتمل رحلة الفخامة بقاعدة العطر غنية من أجود أنواع العود والبخور والتوابل، لتعكس رونق الأصالة الشرقية بكل تفاصيلها.",
+      notes: "قمة: نفحات مائية، التوت البري، صمغ، | قلب: الياسمين، الباتشولي، الورد | قاعدة: العود، البخور، التوابل",
+      price: 1600, img: "Images/Image 3.jpeg",  soldout: false
+    },
+    {
+      id: 4,  name: "Pink Diamond Sakura",
+      desc: "عبق الزهور و العنبر بنفحة الالماس",
+      details: "تغلف بتلات الورد الرقيقة بقوة خشب الصندل، وبين اللحاء والأزهار هناك مجموعة من النفحات مدعومة بمقدمة العطر منعشة بطلُها زهر البرتقال متعانقًا مع الزنبق الذي يتأرجح على قاعدة العطر رزينة وجذابة من المسك والعنبر الفاخر كوشاح وردي حريري يلتف حولك. يدعوك عطر بينك دايموند لتشاركه رحلة عبر الموجات العطرية الفاخرة",
+      notes: "قمة: زهرة الفاوانيا، زهرة البرتقال، ماندارين | قلب: زهور، الزنبق، ازهار الكرز | قاعدة: خشب الصندل، المسك، العنبر",
+      price: 1600, img: "Images/Image 4.jpeg",  soldout: false
+    },
+    {
+      id: 5,  name: "Blue Diamond Aqua",
+      desc: "منعش وخفيف طوال اليوم",
+      details: "ويهب نسيم منعش يمزج بين انتعاش الحمضيات ورائحة البحر. ويسمو المسك القوي والدافئ في هذا العطر ملتفًا بنفحاتٍ مرهفة للباتشولي العميق والنغمات الناعمة لدفء الزعفران والكثافة المركّزة للبخور، التي تدفع بالعطر نحو ارتفاع مثير للمشاعر",
+      notes: "قمة: برغموت، نفحات مائية، زعفران |ىقلب: اكليل الجبل، يلانغ يلانغ، حمضيات | قاعدة: باتشولي، المسك، البخور",
+      price: 1600, img: "Images/Image 5.jpeg",  soldout: false
+    },
+    {
+      id: 6,  name: "White Regent Diamond",
+      desc: "فخامة ونقاء بلا حدود",
+      details: "عطر يتألق بهدوء كأنفاس المخمل ويترك خلفه أثراً كالألماس الذي لا يزول بحكاية تتفتح بعبق الشاي والأعشاب العطرية وتتألق بالباتشولي والفانيليا كوشاح ملكي متفرد",
+      notes: "قمة: التين، الهيل، الشاي، خشب الصندل | قلب: ايريس، اعشاب الفيتيفر | قاعدة: تونكا، باتشولي، الفانيليا",
+      price: 1600, img: "Images/Image 6.jpeg",  soldout: false
+    },
+    {
+      id: 7,  name: "Black Diamond Incense",
+      desc: "عمق وغموض لا يُقاوم",
+      details: "جميعنا مميزون، لكن الاختلافات تحددنا، تمامًا كالنوتات العطرية، نقوم بأدوارنا وحين نتّحد.. نُكوّن معًا رائحة عطرية جميلة تمثلنا جميعًا. تجربة عطرية لا مثيل لها مع بلاك دايموند، يُظهر العود كلّ قوته وجاذبيته في رائحة ثمينة من الجلد والأخشاب تثير كل فخامة وغموض الشرق. عطر يتحدى حواسك، حيث يُنْسج ببراعة بين الجلد الناعم والقوي والنفحات المائية المنعشة. تتلاقى تلك المكونات الفريدة مع روائح غامضة من البخور، في توليفة رائعة تجمع بين الشرق والغرب. ندعوكم لتجربة مثرية لأجمل روائح العود الفاخرة لنلمس بها ذوقكم المترف",
+      notes: "قمة: نفحات مائية، البتولا، الكشمش الاسود | قلب: بخور، خشب الصندل، فانيلا | قاعدة: عنبر، جلد، عود",
+      price: 1600, img: "Images/Image 7.jpeg",  soldout: false
+    },
+    {
+      id: 8,  name: "Balas Rose",
+      desc: "وصلة عطرية للبرغموت بدفء الفانيليا",
+      details: "في قاعة ملكيَة فاخرة تستقبلك رائحة الورد الملكي النقي منذ اللحظة الأولى التي تخطو فيها أقدامك أروقة المكان فتبدأ رائحة الزعفران في الإلتفاف حولك كعباةٍ ملكية مطرزة لتتبعها نفحات من فاكهة حمراء مُنعشة وباردة تتمسك بلجام العطر، وبينما تتنقل عيناك مستكشفة المكان تمدُ جدران الشمواه الفاخر يديها للترحيب بك لتكشف لك مابداخلها من عبق أزهار الياسمين. وما أن تلبث قليلا حتى تتصدر نفحات قوية من خشب البتولا المشبع بالمسك الذي يزين المكان فيحتضنك ليترك بداخلك شعور القوة والسُلطة ضمن أجواء ارستقراطية فاخرة",
+      notes: "قمة: الورد، الزعفران، توت العليق | قلب: الياسمين و الفاانيليا | قاعدة: خشب الارز و المسك و خشب البتولا",
+      price: 1600, img: "Images/Image 8.jpeg",  soldout: false
+    },
+    {
+      id: 9,  name: "Greek Tobacco",
+      desc: "توليفة عطرية تأسر الحواس بعبير الفاوانيا والمسك",
+      details: "ينساب عبير الفاوانيا الرقيقة كالنسيم العذب، مع نغمات المسك العميقة التي تضفي لمسة من الغموض والأناقة. إنه عطر يجسد الجمال والفخامة في آن واحد، يتألق بروعة ويأسر القلوب بسحره الفريد.",
+      notes: "قمة: نرجس، فاكهة الليتشي، زهور | قلب: مشمش، زهرة البرتقال، سوسن | قاعدة: التوباكو اليوناني، مسك، الفاوانيا",
+      price: 1500, img: "Images/Image 9.jpeg",  soldout: false
+    },
+    {
+      id: 10, name: "Arabian Tobacco",
+      desc: "تبغ عربي أصيل بروح الشرق",
+      details: "عطر شرقي فاخر يتميز بنفحات التبغ الدافئة والخشبية، ويتمتع بثبات وانتشار قويين. مثالي للاستخدام المسائي وفي الأجواء الباردة.",
+      notes: "قمة: تبغ، الزعفران و السوسن | قلب: حلوى الكراميل المملح، حبوب التونكا و الورد | قاعدة: القهوه، الدخان، الباتشولي، العنبر و المسك",
+      price: 1500, img: "Images/Image 10.jpeg", soldout: false
+    },
+    {
+      id: 11, name: "Mexican Tobacco",
+      desc: "جراة التوباكو جمايكية بورق الياسمين",
+      details: "بتركيبة جريئة وعصرية ينضح العنبر بجرأة زائدة قبل أن يهدأ بلمسات من التبغ وخشب الأrz ممزوجة بتوليفة نجيل الهند وانتعاش أوراق الياسمين ليكشف عن أناقته وجماله المثير",
+      notes: "قمة: عنبر، باتشولي | قلب: خشب الارز، عود، تبغ جامايكي | قاعدة: نجيل الهند، الياسمين",
+      price: 1500, img: "Images/Image 11.jpeg", soldout: false
+    },
+    {
+      id: 12, name: "French Tobacco",
+      desc: "التوباكو الفرنسي يتدلل بزهرة السوسن",
+      details: "تنساب رائحة زهرة السوسن الفواحة بين هذه المكونات كالنسيم العليل بكل بأناقة وتميز. إنه تجسيد للفخامة والأناقة الفرنسية العريقة، يأسر القلوب ويحمل الروح في رحلة ساحرة من الأناقة العتيقة إلى الحداثة المذهلة",
+      notes: "قمة: البرتقال الاحمر، تفاح اخضر، يوسفي | قلب: التوباكو الفرنسي، زهر البرتقال، قرفة， زنجبيل | قاعدة: خشب الغاياك، ليمون， لبان， زهرة السوسن",
+      price: 1500, img: "Images/Image 12.jpeg", soldout: false
+    },
+    {
+      id: 13, name: "Spanish Tobacco",
+      desc: "حرارة وشغف إسباني",
+      details: "منذ اللحظة التي يُحلّق فيها عطر توباكو الاسباني عاليًا، ينتشر عطره المميز المُغلف بنفحات الزعفران والتونكا، ممتزجًا برقّة مع العنبر والتبغ وأخيرا تعانقه بدقة أزهار الياسمين والأخشاب لخلق أثر عطري رائع",
+      notes: "قمة: نفحات مائية، زعفران، حبوب التونكا | قلب: كاكاو، عنبر، تبغ اسباني | قاعدة: زهرة السوسن، اخشاب",
+      price: 1500, img: "Images/Image 13.jpeg", soldout: false
+    },
+    {
+      id: 14, name: "مسك عبق الرمان",
+      desc: "مسك شرقي بعبق الرمان الطازج",
+      details: "رائحة ناعمة وأنيقة مليئة بالخفة والإنتعاش تجمع بين المسك الصافي ونكهة الرمان الخالصة ويتردد فيه صدى نغمات الفاكهة اللذيذة والزهور وعبير الكشمش",
+      notes: "قمة: البرغموت، الكشمش الاسود، التفاح | قلب: خشب الارز، الباتشولي، الكراميل | قاعدة: المسك، العنبر، الرمان",
+      price: 1000, img: "Images/Image 14.jpeg", soldout: false
+    },
+    {
+      id: 15, name: "مسك الباودر",
+      desc: "ناعم وخفيف كلمسة الباودر",
+      details: "في توليفة عطرية تحاكي رائحة النظافة وتمنحك انتعاش يدوم، وتتخلل بين طبقاته رائحة الفانيليا والعنبر وأخشاب الأرز الساحرة لتمنحك لمسة ناعمة تبقى برفقتك طوال اليوم وتمنحك إحساس الانتعاش",
+      notes: "قمة: الياسمين، يلانغ يلانغ، الورد | قلب: خشب الارز، السوسن، العنبر | قاعدة: المسك، الفانيليا، حبوب التونكا، بودرية",
+      price: 1000, img: "Images/Image 15.jpeg", soldout: false
+    },
+    {
+      id: 16, name: "مسك خاص",
+      desc: "مسك مع زهور العنبرية",
+      details: "تتناثر فيه روائح المسك والعنبر لإحساس فوري بالنظافة والانتعاش، وتفيض في قلب العطره رائحة مسك الغزال الممزوجة مع الزنبق الفاخر ويغزل المسك سحره نحو قاعدة العطر من التونكا والورود لتغمر من يشمها بجمالية الشعور. اخلطه مع عطرك المفضل بعد الاستحمام لثبات وفوحان ساحر",
+      notes: "قمة: المسك، العنبر، زهرة البتولا | قلب: جلد الغزال، زنبق | قاعدة: الورد، فول التونكا",
+      price: 1000, img: "Images/Image 16.jpeg", soldout: false
+    },
+    {
+      id: 17, name: "مسك الفجر",
+      desc: "نقاء الصباح في عطر واحد",
+      details: "عطر مسك الفجر من إبراهيم القرشي هو عطر زهري مسكي ناعم بنفحات دافئة بودرية، أنيق ومريح، مثالي للاستخدام اليومي للجنسين",
+      notes: "قمة: البرغموت، التوت الاحمر | قلب: الزنبق و الياسمين | قاعدة: المسك، حلوى المارينغ و الباتشولي",
+      price: 1000, img: "Images/Image 17.jpeg", soldout: false
+    },
+  ];
+
+  let currentModalProduct = null;
+
+  function openModal(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    currentModalProduct = p;
+    document.getElementById('modalImg').src = p.img;
+    document.getElementById('modalImg').alt = p.name;
+    document.getElementById('modalName').textContent = p.name;
+    document.getElementById('modalPrice').textContent = p.price.toLocaleString() + ' جنيه';
+    document.getElementById('modalDescLong').textContent = p.details;
+    document.getElementById('modalNotes').textContent = p.notes;
+    const addBtn = document.getElementById('modalAddBtn');
+    if (p.soldout) {
+      addBtn.disabled = true;
+      addBtn.textContent = 'Sold Out';
+    } else {
+      addBtn.disabled = false;
+      addBtn.textContent = '🛒 أضف للسلة';
+    }
+    document.getElementById('modalOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+    currentModalProduct = null;
+  }
+
+  function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  function modalAddToCart() {
+    if (!currentModalProduct) return;
+    addToCart(currentModalProduct.id);
+    closeModal();
+  }
+
+  let cart = [];
+
+  function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = products.map(p => `
+      <div class="product-card ${p.soldout ? 'soldout' : ''}" onclick="openModal(${p.id})" style="cursor:pointer;">
+        ${p.soldout ? '<span class="soldout-badge">Sold Out</span>' : ''}
+        <div class="product-img-wrap">
+          <img src="${p.img}" alt="${p.name}" onerror="this.style.opacity='0.3'"/>
+        </div>
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-desc">${p.desc}</div>
+          <div class="product-footer">
+            <div class="product-price">${p.price.toLocaleString()} <span>جنيه</span></div>
+            <button class="add-btn" ${p.soldout ? 'disabled' : ''} onclick="event.stopPropagation(); addToCart(${p.id})">
+              ${p.soldout ? 'Sold Out' : '+ أضف'}
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const existing = cart.find(i => i.id === id);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ ...product, qty: 1 });
+    }
+    updateCart();
+    openCart();
+    // bump cart count animation
+    const countEl = document.getElementById('cartCount');
+    countEl.classList.remove('bump');
+    void countEl.offsetWidth;
+    countEl.classList.add('bump');
+    // floating emoji
+    spawnFloatingEmoji();
+  }
+
+  function spawnFloatingEmoji() {
+    const el = document.createElement('div');
+    el.textContent = '🛒';
+    el.style.cssText = `
+      position:fixed; font-size:1.8rem; pointer-events:none; z-index:9999;
+      left:${30 + Math.random() * 20}px; top:60px;
+      animation: floatEmoji 0.9s ease forwards;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+  }
+
+  // inject floatEmoji keyframe once
+  const style = document.createElement('style');
+  style.textContent = `@keyframes floatEmoji {
+    0%   { opacity:1; transform: translateY(0) scale(1); }
+    100% { opacity:0; transform: translateY(-80px) scale(1.5); }
+  }`;
+  document.head.appendChild(style);
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCart();
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id);
+    else updateCart();
+  }
+
+  function updateCart() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('cartTotal').textContent = total.toLocaleString() + ' جنيه';
+
+    const itemsEl = document.getElementById('cartItems');
+    if (cart.length === 0) {
+      itemsEl.innerHTML = '<div class="cart-empty">السلة فارغة<br>أضف منتجات للبدء ✨</div>';
+      document.getElementById('sendBtn').disabled = true;
+    } else {
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img class="cart-item-img" src="${item.img}" alt="${item.name}" onerror="this.style.opacity='0.3'"/>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${(item.price * item.qty).toLocaleString()} جنيه</div>
+            <div class="cart-item-controls">
+              <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+              <button class="remove-item" onclick="removeFromCart(${item.id})">🗑 حذف</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('sendBtn').disabled = false;
+    }
+  }
+
+  function toggleCart() {
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+
+  function openCart() {
+    document.getElementById('cartDrawer').classList.add('open');
+    document.getElementById('cartOverlay').classList.add('open');
+  }
+
+  function sendOrder() {
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const address = document.getElementById('customerAddress').value.trim();
+
+    if (!name || !phone) {
+      document.getElementById('customerName').style.borderColor = !name ? '#ff6b6b' : '';
+      document.getElementById('customerPhone').style.borderColor = !phone ? '#ff6b6b' : '';
+      return;
+    }
+
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const itemsList = cart.map(i => `• ${i.name} × ${i.qty} = ${(i.price * i.qty).toLocaleString()} جنيه`).join('\n');
+
+    const msg = `🛍️ *طلب جديد من OVA Perfume Store*\n\n👤 الاسم: ${name}\n📞 التليفون: ${phone}${address ? '\n📍 العنوان: ' + address : ''}\n\n*المنتجات:*\n${itemsList}\n\n💰 *الإجمالي: ${total.toLocaleString()} جنيه*`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+
+    // Show success
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('successOverlay').classList.add('show');
+
+    // Reset
+    cart = [];
+    updateCart();
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.getElementById('customerAddress').value = '';
+  }
+
+  function closeSuccess() {
+    document.getElementById('successOverlay').classList.remove('show');
+  }
+
+  // Init
+  renderProducts();
+</script>
+
+</body>
+</html>
